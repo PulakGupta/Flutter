@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1006486129205",
+    "project_id": "first-project-6c72f",
+    "storage_bucket": "first-project-6c72f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1006486129205:android:95820b87c536a23d8b7f7c",
+        "android_client_info": {
+          "package_name": "com.example.promilo_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBx_NllcD6TsPHCxLuAIVAw2Lg0c69lgWA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
