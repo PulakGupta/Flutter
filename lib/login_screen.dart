@@ -14,36 +14,34 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   bool isChecked = false;
-   //Create the TextField Controller
-    final TextEditingController _emailController = TextEditingController();
-    final TextEditingController _passwordController = TextEditingController();
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-    bool enableButton = false;
-
-    @override
-    void dispose(){
-      _emailController.dispose();
-      _passwordController.dispose();
-      super.dispose();
-    }
-
-    void enableButtonMethod(){
-      if(_formKey.currentState?.validate() ?? false){
-        setState(() {
-          enableButton = true;
-        });
-      } else{
-        setState(() {
-          enableButton = false;
-        });
-      }
-    }
-
+  //Create the TextField Controller
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool enableButton = false;
 
   @override
-  Widget build(BuildContext context) { 
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void enableButtonMethod() {
+    if (_formKey.currentState?.validate() ?? false) {
+      setState(() {
+        enableButton = true;
+      });
+    } else {
+      setState(() {
+        enableButton = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -92,12 +90,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     keyboardType: TextInputType.emailAddress,
                     controller: _emailController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    onChanged: (email){
-                      enableButtonMethod();  
+                    onChanged: (email) {
+                      enableButtonMethod();
                     },
-                    validator: (email){
+                    validator: (email) {
                       bool isValid = EmailValidator.validate(email!);
-                      if(isValid == false){
+                      if (isValid == false) {
                         return "Invalid Email";
                       }
                       return null;
@@ -138,11 +136,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: true,
                     controller: _passwordController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    onChanged: (val){
+                    onChanged: (val) {
                       enableButtonMethod();
                     },
-                    validator: (pass){
-                      if(pass!.length < 8){
+                    validator: (pass) {
+                      if (pass!.length < 8) {
                         return "Password shold be of 8 characters.";
                       }
                       return null;
@@ -187,31 +185,30 @@ class _LoginScreenState extends State<LoginScreen> {
               Container(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(50),
-                      backgroundColor: const Color.fromARGB(255, 8, 133, 236),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                        
-                    ),
-                    child: const Text(
-                      'Submit',
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                    ),
-                    onPressed: ()
-                    {
-                      if(enableButton == true){
-                        Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const SecondScreen()),
-                                );
-                      } else {
-                        print("invalid email or password");
-                      }
-                       
-                    },
-                    ),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(50),
+                    backgroundColor: enableButton
+                        ? const Color.fromARGB(255, 4, 141, 254)
+                        : const Color.fromARGB(139, 149, 216, 247),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                  child: const Text(
+                    'Submit',
+                    style: TextStyle(fontSize: 20, color: Colors.white),
+                  ),
+                  onPressed: () {
+                    if (enableButton == true) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SecondScreen()),
+                      );
+                    } else {
+                      print("invalid email or password");
+                    }
+                  },
+                ),
               ),
               const SizedBox(
                 height: 20,
