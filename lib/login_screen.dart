@@ -1,8 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:custom_signin_buttons/button_data.dart';
 import 'package:custom_signin_buttons/button_list.dart';
-//import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter_social_button/flutter_social_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:promilo_app/second_screen.dart';
@@ -15,34 +14,36 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool isChecked = false;
 
-  //Login Function
-  static Future<User?> loginUsingEmailPassword(
-      {required String email,
-      required String password,
-      required BuildContext context}) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User? user;
-    try {
-      UserCredential userCredential = await auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      user = userCredential.user;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == "user-not-found") {
-        print('No user found for this email');
+  bool isChecked = false;
+   //Create the TextField Controller
+    final TextEditingController _emailController = TextEditingController();
+    final TextEditingController _passwordController = TextEditingController();
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    bool enableButton = false;
+
+    @override
+    void dispose(){
+      _emailController.dispose();
+      _passwordController.dispose();
+      super.dispose();
+    }
+
+    void enableButtonMethod(){
+      if(_formKey.currentState?.validate() ?? false){
+        setState(() {
+          enableButton = true;
+        });
+      } else{
+        setState(() {
+          enableButton = false;
+        });
       }
     }
 
-    return user;
-  }
 
   @override
-  Widget build(BuildContext context) {
-    //Create the TextField Controller
-    TextEditingController _emailController = TextEditingController();
-    TextEditingController _passwordController = TextEditingController();
-
+  Widget build(BuildContext context) { 
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -83,15 +84,29 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 10,
               ),
-              Container(
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: TextField(
-                  keyboardType: TextInputType.emailAddress,
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                      hintText: 'Enter Email or Mob No.',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10))),
+              Form(
+                key: _formKey,
+                child: Container(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: TextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    controller: _emailController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    onChanged: (email){
+                      enableButtonMethod();  
+                    },
+                    validator: (email){
+                      bool isValid = EmailValidator.validate(email!);
+                      if(isValid == false){
+                        return "Invalid Email";
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                        hintText: 'Enter Email or Mob No.',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10))),
+                  ),
                 ),
               ),
               Container(
@@ -116,15 +131,27 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 10,
               ),
-              Container(
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: TextField(
-                  obscureText: true,
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                      hintText: 'Enter Password',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10))),
+              Form(
+                child: Container(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: TextFormField(
+                    obscureText: true,
+                    controller: _passwordController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    onChanged: (val){
+                      enableButtonMethod();
+                    },
+                    validator: (pass){
+                      if(pass!.length < 8){
+                        return "Password shold be of 8 characters.";
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                        hintText: 'Enter Password',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10))),
+                  ),
                 ),
               ),
               Row(
@@ -165,33 +192,24 @@ class _LoginScreenState extends State<LoginScreen> {
                       backgroundColor: const Color.fromARGB(255, 8, 133, 236),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
+                        
                     ),
                     child: const Text(
                       'Submit',
                       style: TextStyle(fontSize: 20, color: Colors.white),
                     ),
                     onPressed: ()
-                    //  async {
-                    //   User? user = await loginUsingEmailPassword(
-                    //       email: _emailController.text,
-                    //       password: _passwordController.text,
-                    //       context: context);
-                    //   print(user);
-                    //   if (user != null) {
-                    //     // ignore: use_build_context_synchronously
-                    //     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    //         builder: (context) => const SecondScreen()));
-                    //   }
-                    // }
-
-                    // Another routing
-
                     {
-                       Navigator.push(
+                      if(enableButton == true){
+                        Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => const SecondScreen()),
                                 );
+                      } else {
+                        print("invalid email or password");
+                      }
+                       
                     },
                     ),
               ),
