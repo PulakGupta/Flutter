@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:promilo_app/login_screen.dart';
  
 
-void main() {
+Future<void> main() async {
+  await Firebase.initializeApp();
   runApp(const Promilo());
 }
 
@@ -15,7 +16,7 @@ class Promilo extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body:HomePage(),
+        body:LoginScreen(),
         ) ,
 
       // routes: {
@@ -26,40 +27,3 @@ class Promilo extends StatelessWidget {
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-
-// Initialize Firebase App
-  Future<FirebaseApp> _initializeFirebase() async {
-    FirebaseApp firebaseApp = await Firebase.initializeApp();
-    return firebaseApp;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-  
-    return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.all(5),
-        child: FutureBuilder(
-          future: _initializeFirebase(),
-          builder: (context, snapshot) {
-            if(snapshot.connectionState == ConnectionState.done){
-              return const LoginScreen();
-            }
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
-        ),
-      ),
-
-    );
-  }
-}
