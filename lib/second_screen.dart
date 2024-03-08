@@ -12,9 +12,9 @@ class SecondScreen extends StatefulWidget {
 
 class _SecondScreenState extends State<SecondScreen> {
   final myitems = [
-    Image.asset('assets/images/image1.jpg'),
-    Image.asset('assets/images/image2.jpg'),
+    Image.asset('assets/images/image4.jpg'),
     Image.asset('assets/images/image3.jpeg'),
+    Image.asset('assets/images/image6.jpg'),
   ];
   int myCurrentIndex = 0;
 
@@ -39,12 +39,11 @@ class _SecondScreenState extends State<SecondScreen> {
       body: ListView(
         children: <Widget>[
           Container(
-            padding: const EdgeInsets.only(left: 15,right: 15,top: 15),
+            padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
             child: TextField(
               decoration: InputDecoration(
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-
                 hintText: "Search",
                 hintStyle: const TextStyle(fontSize: 20),
                 prefixIcon: const Icon(
@@ -62,57 +61,57 @@ class _SecondScreenState extends State<SecondScreen> {
           ),
           ClipRRect(
             borderRadius: BorderRadius.circular(15),
-            child: Container(
-              padding: const EdgeInsets.only(top: 15,bottom: 15),
+            child: Padding(
+              padding:  const EdgeInsets.only(top: 15,bottom: 15),
               child: Column(
                 children: [
-                  CarouselSlider(
-                    items: myitems, 
+                  CarouselSlider.builder(
+                    //items: myitems,
                     options: CarouselOptions(
                       autoPlay: true,
                       height: 200,
                       autoPlayCurve: Curves.fastOutSlowIn,
-                      autoPlayAnimationDuration: const Duration(milliseconds: 200),
+                      autoPlayAnimationDuration:
+                          const Duration(milliseconds: 200),
                       autoPlayInterval: const Duration(seconds: 1),
                       enlargeCenterPage: true,
                       aspectRatio: 2.0,
-                      
-            
                       onPageChanged: (index, reason) {
                         setState(() {
                           myCurrentIndex = index;
                         });
                       },
                     ),
+                    itemCount: myitems.length,
+                    itemBuilder: (context, index, realIndex){
+                      return ClipRRect(borderRadius: BorderRadius.circular(10),
+                      child: myitems[index],
+                      );
+                    } ,
+                  ),
+                  AnimatedSmoothIndicator(
+                    activeIndex: myCurrentIndex,
+                    count: myitems.length,
+                    effect: const WormEffect(
+                      dotHeight: 10,
+                      dotWidth: 10,
+                      spacing: 10,
+                      dotColor: Colors.grey,
+                      activeDotColor: Colors.black,
+                      //paintStyle: PaintingStyle.fill,
                     ),
-                    AnimatedSmoothIndicator(
-                      activeIndex: myCurrentIndex, 
-                      count: myitems.length,
-                      effect: const WormEffect(
-                        dotHeight: 10,
-                        dotWidth: 10,
-                        spacing: 10,
-                        dotColor: Colors.grey,
-                        activeDotColor: Colors.black,
-                        //paintStyle: PaintingStyle.fill,
-                      ),
-                      ),
-                      
-                    ],
-                  
+                  ),
+                ],
               ),
             ),
           ),
-          
           const Padding(
             padding: EdgeInsets.all(20.0),
-            child: Text('Trending Popular People',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 15
-            ),),
+            child: Text(
+              'Trending Popular People',
+              style: TextStyle(color: Colors.black, fontSize: 15),
+            ),
           ),
-          
         ],
       ),
     );
